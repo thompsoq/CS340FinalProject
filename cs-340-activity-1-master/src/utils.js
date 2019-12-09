@@ -15,10 +15,13 @@ module.exports = {
             {
                 username: config.onid,
                 menuitems: [
+					{ location: '/actors', page: 'View Actors'},
 					{ location: '/network', page: 'View Network'},
-					{ location: '/series', page: 'View Series'},
+					{ location: '/network/search', page: 'View Network'},
 					{ location: '/reviews', page: 'Views Reviews'},
-					{ location: '/reviews/add', page: 'Add Review' }
+					{ location: '/reviews/add', page: 'Add Review' },
+					{ location: '/series', page: 'View Series'},
+					{ location: '/writers', page: 'View Writers'}
                 ]
             },
             obj

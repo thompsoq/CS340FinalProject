@@ -6,6 +6,8 @@ const { createViewContext } = require('./utils');
 const networkRouter = require('./routes/network');
 const seriesRouter = require('./routes/series');
 const reviewsRouter = require('./routes/reviews');
+const writersRouter = require('./routes/writers');
+const actorsRouter = require('./routes/actors');
 
 const config = require('./config');
 
@@ -54,6 +56,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(networkRouter);
 app.use(seriesRouter);
 app.use(reviewsRouter);
+app.use(writersRouter);
+app.use(actorsRouter);
 
 // Add a handler to render a 404 view
 app.use('*', (req, res) => {
