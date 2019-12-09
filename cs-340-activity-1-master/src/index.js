@@ -3,11 +3,11 @@ const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const { createViewContext } = require('./utils');
-const suppliersRouter = require('./routes/suppliers');
-const partsRouter = require('./routes/parts');
-const catalogRouter = require('./routes/catalog');
 const networkRouter = require('./routes/network');
 const seriesRouter = require('./routes/series');
+const reviewsRouter = require('./routes/reviews');
+const writersRouter = require('./routes/writers');
+const actorsRouter = require('./routes/actors');
 
 const config = require('./config');
 
@@ -53,11 +53,11 @@ app.use((req, res, next) => {
 
 // Add our routes
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(suppliersRouter);
-app.use(partsRouter);
-app.use(catalogRouter);
 app.use(networkRouter);
 app.use(seriesRouter);
+app.use(reviewsRouter);
+app.use(writersRouter);
+app.use(actorsRouter);
 
 // Add a handler to render a 404 view
 app.use('*', (req, res) => {
