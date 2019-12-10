@@ -1,7 +1,7 @@
 header {
 	
 	height: 20px; 
-	background-color: lightgray;
+	background-color: white;
 	margin-top: 0px;
 	margin-right: 0px;
 	margin-bottom: 0px;
@@ -25,6 +25,7 @@ header em {
 }
 
 html, body {
+    background-color: #907fc7;
 	margin: 0px;
 	padding: 0px;
 }
@@ -38,7 +39,7 @@ nav ul {
     list-style-type: none;
     padding: 0;
     overflow: hidden;
-    background-color: #333;
+    background-color: gray;
 	margin: 0 0 0 0;
 }
 
@@ -61,17 +62,17 @@ nav li a {
     text-decoration: none;
 }
 nav li a:hover:not(.active) {
-    background-color: orange;
+    background-color: darkslateblue;
 }
 
 nav .active {
-    background-color: green;
+    background-color: darkgray;
 }
 main {
 	overflow:auto;
 	margin: auto;
-	margin: 10px 10px 10px 10px;
-	background-color: white;
+	margin: 0px 0px 10px 0px;
+	background-image: linear-gradient(white, #907fc7);
 	padding: 10px 10px 10px 10px;
 }
 #betSpan {
@@ -239,6 +240,10 @@ fieldset input[type="submit"], fieldset input[type="reset"], fieldset input[type
 	font-size: 0.8em;
 }
 
+table {
+    box-shadow: 5px 5px;
+}
+
 table,
 th,
 td {
@@ -272,7 +277,7 @@ table#t01 {
 }
 
 table#t01 tr:nth-child(even) {
-  background-color: #e0ebeb;
+  background-color: #ddd4fa;
 }
 
 table#t01 tr:nth-child(odd) {
