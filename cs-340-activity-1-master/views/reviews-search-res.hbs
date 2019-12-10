@@ -1,0 +1,27 @@
+<h1>{{pageName}}</h1>
+<table id="t01" border="1">
+    <thead>
+        <tr>
+			<th>Series Name</th>
+            <th>Episode Number</th>
+			<th>Rating ID</th>
+			<th>Rating</th>
+			<th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#if rows.length }}
+            {{#each rows }}
+                <tr>
+                    <td>{{this.title}}</td>
+                    <td>{{this.ep_num}}</td>
+					<td>{{this.rID}}</td>
+					<td>{{this.rating}}</td>
+					<td>{{this.desc}}</td>
+                </tr>
+            {{/each}}
+        {{else}}
+            <tr><td colspan="3"><p class='lead'><em>No records were found.</em></p></td></tr>
+        {{/if}}
+    </tbody>
+</table>

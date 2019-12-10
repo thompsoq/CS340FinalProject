@@ -30,4 +30,38 @@ router.get('/Series', (req, res, next) => {
     );
 });
 
+
+/**
+ * Route for displaying the form used to add a new part supplier.
+ */
+router.get('/series/search', (req, res) => {
+    res.render('series-search', createViewContext({ message: 'Search for a Series' }));
+});
+
+/**
+ * Logic for actually adding a new part supplier using data from a form submission.
+ */
+router.post('/series/search', (req, res, next) => {
+    let context = createViewContext();
+
+    // Make sure a supplier with the provided SID doesn't already exist
+    req.db.query(
+		`
+		SELECT s.title, AVG(r.rating)
+		FROM Series s, Rated_By b, Reviews r
+		WHERE s.title = ? AND s.sID = b.sID AND b.rID = r.rID
+		`, [req.body.title],
+		(err, results) => {
+			if (err) return next(err);
+			res.render(
+				'series-avrg-rat-res',
+				createViewContext({
+					pageName: 'View Series Avg Rating',
+					rows: results
+				})
+			);
+		}
+	);
+});
+
 module.exports = router;
