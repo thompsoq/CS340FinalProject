@@ -1,13 +1,13 @@
+/*
+ * A lot of this page uses parts from activity 1 as a guide. Begin Express middleware and route
+ */
 const express = require('express');
 const { createViewContext } = require('../utils');
 
 const router = express.Router();
 
-/**
- * Route for listing the catalog of parts.
- * 
- * This serves as an example of joining tables to produce more complex queries. You do not need to modify anything
- * in this file.
+/*
+ * Route to actors database table, query for network id, network name, network address, network website
  */
 router.get('/Network', (req, res, next) => {
     req.db.query(
@@ -29,20 +29,18 @@ router.get('/Network', (req, res, next) => {
     );
 });
 
-/**
- * Route for displaying the form used to add a new part supplier.
+/*
+ * Route to display the network search page
  */
 router.get('/network/search', (req, res) => {
     res.render('network-search', createViewContext({ message: 'Search for Series' }));
 });
 
-/**
- * Logic for actually adding a new part supplier using data from a form submission.
+/*
+ * Script behind quering for which series belongs to which network
  */
 router.post('/network/search', (req, res, next) => {
     let context = createViewContext();
-
-    // Make sure a supplier with the provided SID doesn't already exist
     req.db.query(
 		`
 		SELECT n.nName, s.title 
