@@ -51,7 +51,7 @@ router.post('/reviews/add', (req, res, next) => {
                 err => {
                     if (err) return next(err);
                 }
-				);
+		);
 			req.db.query(
                 'INSERT INTO Rated_By (rID, ep_num, sID) VALUES (?,?,?)',
                 [req.body.rID, req.body.ep_num, req.body.sID],
