@@ -1,6 +1,6 @@
 header {
-	
-	height: 20px; 
+
+	height: 20px;
 	background-color: white;
 	margin-top: 0px;
 	margin-right: 0px;
@@ -167,7 +167,7 @@ em {
 }
 footer {
 	background-color: gray;
-	height: 20px; 
+	height: 20px;
 	padding: 10px;
 	padding-right: 10px;
 	color: white;
@@ -235,8 +235,8 @@ fieldset input[type="submit"], fieldset input[type="reset"], fieldset input[type
     color: #333;
 }
 #passformat {
-	float: right; 
-	width: 50%; 
+	float: right;
+	width: 50%;
 	font-size: 0.8em;
 }
 
@@ -267,13 +267,17 @@ td {
   border-collapse: collapse;
 }
 
-th,
+th {
+	padding: 10px;
+	text-align: center;
+}
 td {
   padding: 5px;
   text-align: left;
 }
 table#t01 {
-	width:400px;
+	width:500px;
+	text-align: center;
 }
 
 table#t01 tr:nth-child(even) {
@@ -285,7 +289,7 @@ table#t01 tr:nth-child(odd) {
 }
 
 table#t01 th {
-  background-color: black;
+  background-color: #907fc7;
   color: white;
 }
 

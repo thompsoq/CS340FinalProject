@@ -77,5 +77,5 @@ app.use((err, req, res, next) => {
 
 // Start our server
 app.listen(PORT, () => {
-    console.log('Activity 1 Server is listening on port ' + PORT);
+    console.log('Final Project - Server is listening on port ' + PORT);
 });
