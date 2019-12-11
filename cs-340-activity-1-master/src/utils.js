@@ -1,20 +1,18 @@
+/*
+ * Most of this page was acquired from activity 1. This page generates contex for handlebars, 
+ * along with locals for context views when the page is rendered.
+ */
 const config = require('./config');
 
 module.exports = {
-    /**
-     * Generates the context object used to render views with Handlebars.
-     *
-     * There are some global context values that should be applied to all views. These are set here. Additional context
-     * can be passed to the function as an object.
-     *
-     * @param {object} [obj] The page-specific context used to render a Handlebars template.
-     * @returns {object} The context used to render the page.
-     */
     createViewContext: obj =>
         Object.assign(
             {
                 username: config.onid,
                 menuitems: [
+					/*
+					 * Contains info about the current URL
+					 */
 					{ location: '/actors', page: 'View Actors'},
 					{ location: '/actors/search', page: 'Search Episodes by Actor'},
 					{ location: '/network', page: 'View Network'},
