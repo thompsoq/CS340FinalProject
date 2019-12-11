@@ -29,4 +29,37 @@ router.get('/Actors', (req, res, next) => {
     );
 });
 
+/**
+ * Route for displaying the form used to add a new part supplier.
+ */
+router.get('/actors/search', (req, res) => {
+    res.render('actors-search', createViewContext({ message: 'Search for an Actor' }));
+});
+
+/**
+ * Logic for actually adding a new part supplier using data from a form submission.
+ */
+router.post('/actors/search', (req, res, next) => {
+    let context = createViewContext();
+
+    // Make sure a supplier with the provided SID doesn't already exist
+    req.db.query(
+		`
+		SELECT a.name, s.title, e.ep_num
+		FROM Actors a, Played_By p, Episodes e, Series s 
+		WHERE a.name = ? AND a.aID = p.aID AND p.sID = e.sID AND p.ep_num = e.ep_num AND e.sID = s.sID
+		`, [req.body.name],
+		(err, results) => {
+			if (err) return next(err);
+			res.render(
+				'actors-search-res',
+				createViewContext({
+					pageName: 'View Actors Search',
+					rows: results
+				})
+			);
+		}
+	);
+});
+
 module.exports = router;
