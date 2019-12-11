@@ -1,13 +1,16 @@
+/*
+ * A lot of this page uses parts from activity 1 as a guide. Begin Express middleware and route
+ */
 const express = require('express');
 const { createViewContext } = require('../utils');
 
 const router = express.Router();
 
-/**
- * Route for listing part suppliers.
+/*
+ * Route to reviews database table, query for everything, then create
+ * view/render for reviews.hbl if there were no errors 
  */
 router.get('/reviews', (req, res, next) => {
-    // TODO: implement the selection query
 	req.db.query('SELECT * FROM Reviews', (err, results) => {
 		if (err) return next(err);
 		res.render(
@@ -20,15 +23,15 @@ router.get('/reviews', (req, res, next) => {
 	});
 });
 
-/**
- * Route for displaying the form used to add a new part supplier.
+/*
+ * Route to display the review add page
  */
 router.get('/reviews/add', (req, res) => {
     res.render('reviews-add', createViewContext({ message: 'Add New Review' }));
 });
 
-/**
- * Logic for actually adding a new part supplier using data from a form submission.
+/*
+ * Script behind the addition of a review into the Reviews table and Rated_By table
  */
 router.post('/reviews/add', (req, res, next) => {
     let context = createViewContext();
@@ -63,20 +66,18 @@ router.post('/reviews/add', (req, res, next) => {
     });
 });
 
-/**
- * Route for displaying the form used to add a new part supplier.
+/*
+ * Route to display the review search page
  */
 router.get('/reviews/search', (req, res) => {
     res.render('reviews-search', createViewContext({ message: 'Search for a Review' }));
 });
 
-/**
- * Logic for actually adding a new part supplier using data from a form submission.
+/*
+ * Script behind the search for reviews based on series and episode
  */
 router.post('/reviews/search', (req, res, next) => {
     let context = createViewContext();
-
-    // Make sure a supplier with the provided SID doesn't already exist
     req.db.query(
 		`
 		SELECT s.title, e.ep_num, r.rID, r.rating, r.desc
