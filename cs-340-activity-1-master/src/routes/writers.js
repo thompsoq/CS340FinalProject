@@ -1,13 +1,14 @@
+/*
+ * A lot of this page uses parts from activity 1 as a guide. Begin Express middleware and route
+ */
 const express = require('express');
 const { createViewContext } = require('../utils');
 
 const router = express.Router();
 
-/**
- * Route for listing the catalog of parts.
- * 
- * This serves as an example of joining tables to produce more complex queries. You do not need to modify anything
- * in this file.
+/*
+ * Route to writers database table, query writers name and series title, then create
+ * view/render for writers.hbl if there were no errors 
  */
 router.get('/Writers', (req, res, next) => {
     req.db.query(
