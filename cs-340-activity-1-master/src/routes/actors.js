@@ -1,13 +1,14 @@
+/*
+ * A lot of this page uses parts from activity 1 as a guide. Begin Express middleware and route
+ */
 const express = require('express');
 const { createViewContext } = require('../utils');
 
 const router = express.Router();
 
-/**
- * Route for listing the catalog of parts.
- * 
- * This serves as an example of joining tables to produce more complex queries. You do not need to modify anything
- * in this file.
+/*
+ * Route to actors database table, quert for name, actor id, address and phone number, then create
+ * view/render for actors.hbl if there were no errors 
  */
 router.get('/Actors', (req, res, next) => {
     req.db.query(
@@ -29,20 +30,18 @@ router.get('/Actors', (req, res, next) => {
     );
 });
 
-/**
- * Route for displaying the form used to add a new part supplier.
+/*
+ * Route to display the actor search page
  */
 router.get('/actors/search', (req, res) => {
     res.render('actors-search', createViewContext({ message: 'Search for an Actor' }));
 });
 
-/**
- * Logic for actually adding a new part supplier using data from a form submission.
+/*
+ * Script behind quering for which actors played in which series
  */
 router.post('/actors/search', (req, res, next) => {
     let context = createViewContext();
-
-    // Make sure a supplier with the provided SID doesn't already exist
     req.db.query(
 		`
 		SELECT a.name, s.title, e.ep_num
