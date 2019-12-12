@@ -42,23 +42,31 @@ router.get('/actors/search', (req, res) => {
  */
 router.post('/actors/search', (req, res, next) => {
     let context = createViewContext();
-    req.db.query(
-		`
-		SELECT a.name, s.title, e.ep_num
-		FROM Actors a, Played_By p, Episodes e, Series s 
-		WHERE a.name = ? AND a.aID = p.aID AND p.sID = e.sID AND p.ep_num = e.ep_num AND e.sID = s.sID
-		`, [req.body.name],
-		(err, results) => {
-			if (err) return next(err);
-			res.render(
-				'actors-search-res',
-				createViewContext({
-					pageName: 'View Actors Search',
-					rows: results
-				})
+	req.db.query('SELECT * FROM Actors WHERE name = ?', [req.body.name], (err, results) => {	
+		if (err) return next(err);
+        if (results.length) {
+			req.db.query(
+				`
+				SELECT a.name, s.title, e.ep_num
+				FROM Actors a, Played_By p, Episodes e, Series s 
+				WHERE a.name = ? AND a.aID = p.aID AND p.sID = e.sID AND p.ep_num = e.ep_num AND e.sID = s.sID
+				`, [req.body.name],
+				(err, results) => {
+					if (err) return next(err);
+					res.render(
+						'actors-search-res',
+						createViewContext({
+							pageName: 'View Actors Search',
+							rows: results
+						})
+					);
+				}
 			);
+		} else {
+			context.message = `Can't search because actors name ${req.body.name} doesn't exist`;
+			res.render('actors-search', context);	
 		}
-	);
+	});
 });
 
 module.exports = router;
