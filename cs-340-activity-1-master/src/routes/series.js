@@ -45,23 +45,31 @@ router.get('/series/search', (req, res) => {
  */
 router.post('/series/search', (req, res, next) => {
     let context = createViewContext();
-    req.db.query(
-		`
-		SELECT s.title, AVG(r.rating) as "AverageRating"
-		FROM Series s, Rated_By b, Reviews r
-		WHERE s.title = ? AND s.sID = b.sID AND b.rID = r.rID
-		`, [req.body.title],
-		(err, results) => {
-			if (err) return next(err);
-			res.render(
-				'series-avrg-rat-res',
-				createViewContext({
-					pageName: 'View Series Avg Rating',
-					rows: results
-				})
+	req.db.query('SELECT * FROM Series WHERE title = ?', [req.body.title], (err, results) => {	
+		if (err) return next(err);
+        if (results.length) {
+			req.db.query(
+				`
+				SELECT s.title, AVG(r.rating) as "AverageRating"
+				FROM Series s, Rated_By b, Reviews r
+				WHERE s.title = ? AND s.sID = b.sID AND b.rID = r.rID
+				`, [req.body.title],
+				(err, results) => {
+					if (err) return next(err);
+					res.render(
+						'series-avrg-rat-res',
+						createViewContext({
+							pageName: 'View Series Avg Rating',
+							rows: results
+						})
+					);
+				}
 			);
+		} else {
+			context.message = `Can't search because series title ${req.body.title} doesn't exist`;
+			res.render('series-search', context);	
 		}
-	);
+	});
 });
 
 module.exports = router;
