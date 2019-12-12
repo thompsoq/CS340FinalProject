@@ -47,7 +47,7 @@ router.post('/series/search', (req, res, next) => {
     let context = createViewContext();
     req.db.query(
 		`
-		SELECT s.title, AVG(r.rating)
+		SELECT s.title, AVG(r.rating) as "AverageRating"
 		FROM Series s, Rated_By b, Reviews r
 		WHERE s.title = ? AND s.sID = b.sID AND b.rID = r.rID
 		`, [req.body.title],
