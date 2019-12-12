@@ -36,22 +36,26 @@ html {
 	font-size: 18px;
 }
 nav ul {
-    list-style-type: none;
-    padding: 0;
-    overflow: hidden;
-    background-color: gray;
+	list-style-type: none;
+	overflow: hidden;
+	background-color: gray;
 	margin: 0 0 0 0;
+	height: 100%; /* Full-height: remove this if you want "auto" height */
+	width: 160px; /* Set the width of the sidebar */
+	position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+	z-index: 1; /* Stay on top */
+	top: 0; /* Stay at the top */
+	right: 0;
+	padding-top: 20px;
 }
 
 nav li {
     float: left;
-    border-right:1px solid #bbb;
 }
 
 nav li:nth-last-child(-n+5){
     border-right: none;
-    float: right;
-    border-left:1px solid #bbb;
+    float: left;
 }
 
 nav li a {
