@@ -7,105 +7,65 @@ const { createViewContext } = require('../utils');
 const router = express.Router();
 
 /*
- * Route to reviews database table, query for everything, then create
- * view/render for reviews.hbl if there were no errors 
+ * Route to actors database table, query for network id, network name, network address, network website
  */
-router.get('/reviews', (req, res, next) => {
-	req.db.query('SELECT * FROM Reviews', (err, results) => {
+router.get('/Network', (req, res, next) => {
+    req.db.query(
+        `
+        SELECT n.nID, n.nName, n.nAddress, n.nWebsite
+        FROM Network n
+        ORDER BY n.nID
+        `,
+        (err, results) => {
+            if (err) return next(err);
+            res.render(
+                'network',
+                createViewContext({
+                    pageName: 'View Network',
+                    rows: results
+                })
+            );
+        }
+    );
+});
+
+/*
+ * Route to display the network search page
+ */
+router.get('/network/search', (req, res) => {
+    res.render('network-search', createViewContext({ message: 'Search for Series' }));
+});
+
+/*
+ * Script behind quering for which series belongs to which network
+ */
+router.post('/network/search', (req, res, next) => {
+    let context = createViewContext();
+	req.db.query('SELECT * FROM Network WHERE nName = ?', [req.body.nName], (err, results) => {	
 		if (err) return next(err);
-		res.render(
-			'reviews',
-			createViewContext({
-				pageName: 'List Reviews',
-				rows: results
-			})
-		);
+        if (results.length) {
+			req.db.query(
+				`
+				SELECT n.nName, s.title 
+				FROM Network n, Series s
+				WHERE n.nName = ? AND n.nID = s.nID
+				`, [req.body.nName],
+				(err, results) => {
+					if (err) return next(err);
+					res.render(
+						'network-srch-res',
+						createViewContext({
+							pageName: 'View Network Search',
+							rows: results
+						})
+					);
+				}
+			);
+		} else {
+			context.message = `Can't search because network name ${req.body.nName} doesn't exist`;
+			res.render('network-search', context);			
+		}
 	});
 });
-
-/*
- * Route to display the review add page
- */
-router.get('/reviews/add', (req, res) => {
-    res.render('reviews-add', createViewContext({ message: 'Add New Review' }));
-});
-
-/*
- * Script behind the addition of a review into the Reviews table and Rated_By table
- */
-router.post('/reviews/add', (req, res, next) => {
-    let context = createViewContext();
-
-    req.db.query('SELECT * FROM Reviews WHERE rID = ?', [req.body.rID], (err, results) => {
-        if (err) return next(err);
-        if (results.length) {
-            context.message = `Can't create review because rID ${req.body.rID} already exists`;
-            res.render('reviews-add', context);
-        } else {
-			req.db.query('SELECT * FROM Episodes WHERE sID = ? AND ep_num = ?', [req.body.sID, req.body.ep_num], (err, results) => {
-			if (err) return next(err);
-			if (results.length) {
-				req.db.query(
-					'INSERT INTO Reviews (user_name, rating, `desc`, rID) VALUES (?,?,?,?)',
-					[req.body.user_name, req.body.rating, req.body.desc, req.body.rID],
-					err => {
-						if (err) return next(err);
-					}
-				);
-				req.db.query(
-					'INSERT INTO Rated_By (rID, ep_num, sID) VALUES (?,?,?)',
-					[req.body.rID, req.body.ep_num, req.body.sID],
-					err => {
-						if (err) return next(err);
-
-						context.message = 'Review added successfully';
-						res.render('reviews-add', context);
-					}
-				);
-			} else {
-				context.message = `Can't create review because sID ${req.body.sID} doesn't exist`;
-				res.render('reviews-add', context);
-			}
-        	});
-	}
-    });
-});
-
-/*
- * Route to display the review search page
- */
-router.get('/reviews/search', (req, res) => {
-    res.render('reviews-search', createViewContext({ message: 'Search for a Review' }));
-});
-
-/*
- * Script behind the search for reviews based on series and episode
- */
-router.post('/reviews/search', (req, res, next) => {
-    let context = createViewContext();
-    req.db.query(
-		`
-		SELECT s.title, e.ep_num, r.rID, r.rating, r.desc
-		FROM Reviews r, Rated_By b, Episodes e, Series s
-		WHERE s.title = ? 
-		AND e.ep_num = ? 
-		AND r.rID = b.rID 
-		AND b.sID = e.sID 
-		AND b.ep_num = e.ep_num 
-		AND e.sID = s.sID
-		`, [req.body.title, req.body.ep_num],
-		(err, results) => {
-			if (err) return next(err);
-			res.render(
-				'reviews-search-res',
-				createViewContext({
-					pageName: 'View Review Search',
-					rows: results
-				})
-			);
-		}
-	);
-});
-
 
 module.exports = router;
