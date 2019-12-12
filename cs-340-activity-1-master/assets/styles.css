@@ -276,6 +276,7 @@ th {
 	text-align: center;
 }
 td {
+  white-space:pre
   padding: 5px;
   text-align: left;
 }
