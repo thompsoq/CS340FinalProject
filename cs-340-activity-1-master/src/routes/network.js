@@ -41,23 +41,31 @@ router.get('/network/search', (req, res) => {
  */
 router.post('/network/search', (req, res, next) => {
     let context = createViewContext();
-    req.db.query(
-		`
-		SELECT n.nName, s.title 
-		FROM Network n, Series s
-		WHERE n.nName = ? AND n.nID = s.nID
-		`, [req.body.nName],
-		(err, results) => {
-			if (err) return next(err);
-			res.render(
-				'network-srch-res',
-				createViewContext({
-					pageName: 'View Network Search',
-					rows: results
-				})
+	req.db.query('SELECT * FROM Network WHERE nName = ?', [req.body.nName], (err, results) => {	
+		if (err) return next(err);
+        if (results.length) {
+			req.db.query(
+				`
+				SELECT n.nName, s.title 
+				FROM Network n, Series s
+				WHERE n.nName = ? AND n.nID = s.nID
+				`, [req.body.nName],
+				(err, results) => {
+					if (err) return next(err);
+					res.render(
+						'network-srch-res',
+						createViewContext({
+							pageName: 'View Network Search',
+							rows: results
+						})
+					);
+				}
 			);
+		} else {
+			context.message = `Can't search because network name ${req.body.nName} doesn't exist`;
+			res.render('network-search', context);			
 		}
-	);
+	});
 });
 
 module.exports = router;
