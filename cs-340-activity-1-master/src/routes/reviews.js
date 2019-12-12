@@ -36,33 +36,38 @@ router.get('/reviews/add', (req, res) => {
 router.post('/reviews/add', (req, res, next) => {
     let context = createViewContext();
 
-    // Make sure a supplier with the provided SID doesn't already exist
     req.db.query('SELECT * FROM Reviews WHERE rID = ?', [req.body.rID], (err, results) => {
         if (err) return next(err);
         if (results.length) {
-            // Already exists
-            context.message = `Can't create parts with RID ${req.body.rID} because it already exists`;
+            context.message = `Can't create review because rID ${req.body.rID} already exists`;
             res.render('reviews-add', context);
         } else {
-            // Doesn't exist, create it
-            req.db.query(
-                'INSERT INTO Reviews (user_name, rating, `desc`, rID) VALUES (?,?,?,?)',
-                [req.body.user_name, req.body.rating, req.body.desc, req.body.rID],
-                err => {
-                    if (err) return next(err);
-                }
-		);
-			req.db.query(
-                'INSERT INTO Rated_By (rID, ep_num, sID) VALUES (?,?,?)',
-                [req.body.rID, req.body.ep_num, req.body.sID],
-                err => {
-                    if (err) return next(err);
+			req.db.query('SELECT * FROM Episodes WHERE sID = ? AND ep_num = ?', [req.body.sID, req.body.ep_num], (err, results) => {
+			if (err) return next(err);
+			if (results.length) {
+				req.db.query(
+					'INSERT INTO Reviews (user_name, rating, `desc`, rID) VALUES (?,?,?,?)',
+					[req.body.user_name, req.body.rating, req.body.desc, req.body.rID],
+					err => {
+						if (err) return next(err);
+					}
+				);
+				req.db.query(
+					'INSERT INTO Rated_By (rID, ep_num, sID) VALUES (?,?,?)',
+					[req.body.rID, req.body.ep_num, req.body.sID],
+					err => {
+						if (err) return next(err);
 
-                    context.message = 'Review added successfully';
-                    res.render('reviews-add', context);
-                }
-            );
-        }
+						context.message = 'Review added successfully';
+						res.render('reviews-add', context);
+					}
+				);
+			} else {
+				context.message = `Can't create review because sID ${req.body.sID} doesn't exist`;
+				res.render('reviews-add', context);
+			}
+        });
+		}
     });
 });
 
